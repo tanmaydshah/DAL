@@ -1,0 +1,64 @@
+import matplotlib
+import pylab
+matplotlib.use('GTK') # do this before importing pylab
+import matplotlib.pyplot as plt
+import random
+import serial, re
+import time
+import math
+import numpy
+import subprocess
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ay = fig.add_subplot(111)
+az = fig.add_subplot(111)
+ar = fig.add_subplot(111)
+
+x = range(50)
+xx = [random.random() for i in x]
+yy = [random.random() for i in x]
+zz = [random.random() for i in x]
+rr = [random.random() for i in x]
+
+line1, = ax.plot(x,xx)
+line2, = ay.plot(x,yy)
+line3, = az.plot(x,zz)
+line4, = ar.plot(x,rr)
+
+process1=subprocess.Popen(['python','ser1.py'],shell=False,stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+process2=subprocess.Popen(['python','ser2.py'],shell=False,stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+
+def animate(*args):
+		nx = len(xx)
+		ny = len(yy)
+		nz = len(zz)
+		nr = len(rr)
+		d = 0
+		x0=0
+		y0=0
+		z0=0
+		r0=0
+		r1=0
+		x10=0
+		y10=0
+		z10=0
+		r10=0
+		r11=0
+
+		dt=(1.0/20)
+		RC=0.3
+		alpha=dt/(RC+dt)
+		count=0
+		count1=0
+		while 1:
+			#acc = re.findall("[+/-]\d+",t)
+			print process1.communicate()
+			print process2.communicate()
+			
+			
+			
+			
+			
+			
+			
