@@ -1,0 +1,16 @@
+Ducere App Labs
+App #1
+25th Feb to 1st March 2013
+
+Objective: To use the LeChal shoes as a mouse-event controller (Left Click, Right Click, Scroll Up, Scroll Down)
+
+Solution:
+CLICKS: When the foot is tapped on the floor, it causes a spike in the Z-axis accelerometer readings. Using these values, smoothing them and setting a threshold to remove unwanted noise, taps are recognized and then converted to on-screen mouse events.
+
+SCROLLING: Scrolling is activated only when both feet are raised (either from the heel or the toes). When X-axis accelerometer values for both feet cross a certain threshold, scrolling up or down is enabled. 
+
+Language: Python, with PyMouse for mouse control.
+
+Filename: mosueclickusingLC.py 
+
+Authors: Kunal Gupta (dirtydevil), Tanmay Shah (ZeShah)
