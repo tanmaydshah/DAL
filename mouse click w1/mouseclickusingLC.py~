@@ -8,14 +8,31 @@ import time
 import math
 import numpy
 from pymouse import PyMouse
-import os
 
+
+
+ser=serial.Serial()
+ser.baudrate=57600
+ser.port='/dev/rfcomm1'
+ser.timeout=2
+ser.open()
+
+m=PyMouse()
+
+
+
+#ser1=serial.Serial()
+#ser1.baudrate=57600
+#ser1.port='/dev/rfcomm1'
+#ser1.timeout=2
+#ser1.open()
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ay = fig.add_subplot(111)
 az = fig.add_subplot(111)
 ar = fig.add_subplot(111)
+#ay = fig.add_subplot(110)
 
 x = range(50)
 xx = [random.random() for i in x]
@@ -29,21 +46,9 @@ line3, = az.plot(x,zz)
 line4, = ar.plot(x,rr)
 
 
-ser=serial.Serial()
-ser.baudrate=57600
-ser.port='/dev/rfcomm1'
-ser.timeout=2
-ser.open()
-
-m=PyMouse()
+#Filtering
 
 
-
-ser1=serial.Serial()
-ser1.baudrate=57600
-ser1.port='/dev/rfcomm0'
-ser1.timeout=2
-ser1.open()
 
 def animate(*args):
 		nx = len(xx)
@@ -69,22 +74,22 @@ def animate(*args):
 		count1=0
 		while 1:
 			ser.write('XRA')
+			#time.sleep(0.001)
+			#ser1.write('XRA')
 			time.sleep(0.001)
+			
 			t=ser.readline()
+			#time.sleep(0.001)
+			#u=ser1.readline()
+			
 			acc = re.findall("[+/-]\d+",t)
-			
-			
-			ser1.write('XRA')
-			time.sleep(0.001)
-			u=ser1.readline()
-			acc1= re.findall("[+/-]\d+",u)
-			#print acc1
+			#acc1= re.findall("[+/-]\d+",u)
 			mx,my=m.position()
 			#print mx
 			#print my
 			
 			
-			if len(acc) == 3 and len(acc1)==3:
+			if len(acc) == 3:
 				sx=float((alpha*(float(int(acc[0]))))+((1.0-alpha)*x0))
 				sy=float((alpha*(float(int(acc[1]))))+((1.0-alpha)*y0))
 				sz=float((alpha*(float(int(acc[2]))))+((1.0-alpha)*z0))
@@ -95,11 +100,11 @@ def animate(*args):
 				tr=(float((sr))/200)+.5
 				#tz=(float(int(acc[2]))/200)+.5
 				
-				sx1=float((alpha*(float(int(acc1[0]))))+((1.0-alpha)*x10))
-				sy1=float((alpha*(float(int(acc1[1]))))+((1.0-alpha)*y10))
-				sz1=float((alpha*(float(int(acc1[2]))))+((1.0-alpha)*z10))
-				sr1=float(math.sqrt(math.pow(sx1,2.0)+math.pow(sy1,2.0)+math.pow(sz1,2.0)))
-				#print sz1
+			#	sx1=float((alpha*(float(int(acc1[0]))))+((1.0-alpha)*x10))
+			#	sy1=float((alpha*(float(int(acc1[1]))))+((1.0-alpha)*y10))
+			#	sz1=float((alpha*(float(int(acc1[2]))))+((1.0-alpha)*z10))
+			#	sr1=float(math.sqrt(math.pow(sx1,2.0)+math.pow(sy1,2.0)+math.pow(sz1,2.0)))
+				
 				
 				if tx>1:
 					tx=1
@@ -109,10 +114,9 @@ def animate(*args):
 					tz=1
 				if tr>1:
 					tr=1
-				
-				if sz<54.00 and sz1>60.00:				
+				if sz<54.00:				
 					if r1<sr and r1<r0:
-						print 'RIGHT CLICK'
+						print 'LEFT CLICK'
 						print 'resultant : '+str(int(sr))
 						print 'X : ' + str(int(sx))
 						print 'Y : ' + str(int(sy))
@@ -120,31 +124,18 @@ def animate(*args):
 						time.sleep(0.1)
 						count=count+1
 						print 'counter : ' + str(count)
-						#print 'X : ' + str(int(sx))
-						#print 'Y : ' + str(int(sy))
-						m.click(mx,my,2)
-				
-				if sz1<54.00 and sz>60.00:
-					if r11<sr1 and r11<r10:
-						print 'LEFT CLICK'
-						print 'resultant : '+str(int(sr1))
-						print 'X : ' + str(int(sx1))
-						print 'Y : ' + str(int(sy1))
-						print 'Z : ' + str(int(sz1))
-						time.sleep(0.1)
-						count1=count1+1
-						print 'counter : ' + str(count1)
 						m.click(mx,my,1)
-				if sz<54.00 and sz1<54.00:
-					if r1<sr and r1<r0 and r11<sr1 and r11<r10:
-						if sx < 0 and sx1<0:
-							print 'Wheel UP'
-							os.system("xdotool click 4")
-							time.sleep(0.1)
-						if sx>20 and sx1>20:
-							print 'Wheel DOWN'
-							os.system("xdotool click 5")
-							time.sleep(0.1)
+				
+			#	if sz1<54.00:
+			#		if r11<sr1 and r11<r10:
+			#			print 'RIGHT CLICK'
+			#			print 'resultant : '+str(int(sr1))
+			#			print 'X : ' + str(int(sx1))
+			#			print 'Y : ' + str(int(sy1))
+			#			print 'Z : ' + str(int(sz1))
+			#			time.sleep(0.1)
+			#			count1=count1+1
+			#			print 'counter : ' + str(count1)
 				xx.append(tx)
 				yy.append(ty)
 				zz.append(tz)
@@ -154,12 +145,11 @@ def animate(*args):
 				z0=sz
 				r0=r1
 				r1=sr
-				
-				x10=sx1
-				y10=sy1
-			 	z10=sz1
-			 	r10=r11
-			 	r11=sr1
+			#	x10=sx1
+			#	y10=sy1
+			# 	z10=sy1
+			# 	r10=r11
+			# 	r11=sr1
 				
 			else:
 				xx.append(0)
@@ -188,5 +178,3 @@ fig.canvas.manager.window.after(1000, animate)
 plt.show()
 while(1):
 		ff=1
-
-
