@@ -11,6 +11,6 @@ SCROLLING: Scrolling is activated only when both feet are raised (either from th
 
 Language: Python, with PyMouse for mouse control.
 
-Filename: mosueclickusingLC.py 
+Filename: mouseclickusingLC.py 
 
 Authors: Kunal Gupta (dirtydevil), Tanmay Shah (ZeShah)
